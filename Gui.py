@@ -1,5 +1,6 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QGridLayout
 from PyQt5.QtWidgets import QLineEdit, QPushButton, QHBoxLayout
 
@@ -17,6 +18,21 @@ class Gui(QWidget):
         self.show()
 
         self.detectSerialPort = DetectSerialPort()  # create detect available COM
+
+    def keyPressEvent(self, e):
+        if e.key() == Qt.Key_Escape:
+            self.close()
+
+    def closeEvent(self, event):
+        odp = QMessageBox.question(
+            self, 'Komunikat',
+            "Czy na pewno koniec?",
+            QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+        if odp == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
 
     def findCom(self):
         comInst = str(self.SerialPortLine.text())
@@ -44,21 +60,19 @@ class Gui(QWidget):
         else:
             self.LogLine.setText("Cannot connect. No port had been found.")
 
-
     def disconnectCom(self):
         if (self.detectFlag == 1):
             self.detectFlag = 0
             del self.detectSerialPort
             self.LogLine.setText("Disconnected " + str(self.comPort))
 
-    def printLog(self):
-        pass
 
     def printTemp(self):
         pass
 
     def printTempAvg(self):
         pass
+
 
     def createButtosn(self):
         self.findCOM = QPushButton("&Find", self)
@@ -154,4 +168,6 @@ if __name__ == '__main__':
 
     app = QApplication(sys.argv)
     okno = Gui()
+
+
     sys.exit(app.exec_())
