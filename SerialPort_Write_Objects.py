@@ -1,11 +1,11 @@
 import time
 import serial
 from DetectSerialPort import DetectSerialPort
-
+from SpecialSerialPort import SpecialSerialPort
 
 
 arduinoSerialPort = serial.Serial('COM3', 115200, timeout=0.2, write_timeout=0.2)
-from SpecialSerialPort import SpecialSerialPort
+
 test_object = SpecialSerialPort(arduinoSerialPort)
 
 test_object.commandDictionary

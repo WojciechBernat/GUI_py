@@ -4,6 +4,9 @@ from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import Qt, QTimer
 
+import serial, time
+from SpecialSerialPort import SpecialSerialPort
+from DetectSerialPort import DetectSerialPort
 
 class Gui(QWidget):
     def __init__(self, parent=None):
@@ -12,10 +15,25 @@ class Gui(QWidget):
         self.createInterface()
         self.show()
 
+        self.detectSerialPort = DetectSerialPort()   ##create detect available COM
+
+
+
 
     def findCom(self):
-        self.LogLine.setText("Pressed find COM")
+        comInst = str(self.SerialPortLine.text())
+        if(comInst == ""):
+            self.LogLine.setText("Nothing to find.")
+            return -1
 
+        self.LogLine.setText("To find in COM instances: " + comInst)
+        self.detectSerialPort.toFind = comInst
+        comPort = self.detectSerialPort.detectPort()
+
+        if (comPort == None ):
+            self.LogLine.setText("Not found.")
+        else:
+            self.LogLine.setText("Found: " + str(comPort))
 
     def connectCom(self):
         self.LogLine.setText("Pressed connect COM")
@@ -61,7 +79,7 @@ class Gui(QWidget):
         self.LogLine = QLineEdit()
 
         #line settings
-        self.SerialPortLine.setReadOnly(True)
+        #self.SerialPortLine.setReadOnly(True)
         self.TemperatureLine.setReadOnly(True)
         self.TempertureAvgLine.setReadOnly(True)
         self.LogLine.setReadOnly(True)
