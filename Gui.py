@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel,  QGridLayout
 from PyQt5.QtWidgets import QLineEdit, QPushButton, QHBoxLayout
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import Qt, QTimer
 
@@ -12,6 +12,28 @@ class Gui(QWidget):
         self.createInterface()
         self.show()
 
+
+    def findCom(self):
+        self.LogLine.setText("Pressed find COM")
+
+
+    def connectCom(self):
+        self.LogLine.setText("Pressed connect COM")
+
+
+    def disconnectCom(self):
+        self.LogLine.setText("Pressed disconnect COM")
+
+    def printLog(self):
+        pass
+
+    def printTemp(self):
+        pass
+
+    def printTempAvg(self):
+        pass
+
+
     def createButtosn(self):
         self.findCOM = QPushButton("&Find", self)
         self.connectCOM = QPushButton("&Connect", self)
@@ -21,6 +43,12 @@ class Gui(QWidget):
         self.buttonLayout.addWidget(self.findCOM)
         self.buttonLayout.addWidget(self.connectCOM)
         self.buttonLayout.addWidget((self.disconnectCOM))
+
+        #connect button with functions
+        self.findCOM.clicked.connect(self.findCom)
+        self.connectCOM.clicked.connect(self.connectCom)
+        self.disconnectCOM.clicked.connect(self.disconnectCom)
+
 
         self.layOutPattern.addLayout(self.buttonLayout, 2, 0, 1, 1)
         self.setLayout(self.layOutPattern)
@@ -50,6 +78,7 @@ class Gui(QWidget):
         self.TempertureAvgLine.setMaximumSize(150, 20)
 
         #aligment
+        self.LogLine.setAlignment(Qt.AlignTop)
         self.TemperatureLine.setAlignment(Qt.AlignRight)
         self.TempertureAvgLine.setAlignment(Qt.AlignRight)
 
@@ -93,6 +122,9 @@ class Gui(QWidget):
         #windows settings
         self.setGeometry(200, 200, 600, 200)
         self.setWindowTitle("Tank GUI")
+        self.setWindowIcon(QIcon('tank_icon.png'))
+
+
 
 
 if __name__ == '__main__':
