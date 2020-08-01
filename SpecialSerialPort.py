@@ -32,6 +32,9 @@ class SpecialSerialPort:
         # print(self.comLayer)
         # print(self.comDetect)
 
+    def __del__(self):
+        print("Run destructor.")
+
     #main data buffer in place where date will be copy after receive
     #in this array you can add your specify buffer.
     # i.e. __mainDataBuffer = [temperature, voltage, speed, preasure]

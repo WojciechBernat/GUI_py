@@ -5,6 +5,7 @@ class DetectSerialPort:
 
     def __init__(self):
         self.__toFind = "Arduino"
+        self.com = ""
 
     @property
     def toFind(self):
@@ -58,7 +59,8 @@ class DetectSerialPort:
                 raise ValueError
             else:
                 print("Detected port: " + str(portInfo[0]))
-                return portInfo[0]
+                self.com = portInfo[0]
+                return self.com
         except ValueError:
             print("Port you are looking for was not found.")
 
