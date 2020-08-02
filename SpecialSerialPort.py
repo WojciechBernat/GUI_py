@@ -15,24 +15,25 @@ class SpecialSerialPort:
                     0xAAC: "TelemetryCmd"}
     __rwTimeOut = 1.5
 
-    def __init__(self, serialClass = serial.Serial(None, 115200) ):
+    def __init__(self, serialClass ):
         try:
             if (type(serialClass) != serial.Serial):
                 raise TypeError
             else:
-                self.__serialPortInstance = serialClass  # serial port class from PySerial
+                self.serialPortInstance = serialClass  # serial port class from PySerial
                 print("Correct type of serial port instances.")
         except:
             print("Incorrect type of serial port instances.")
         self.__writeBuffer = []
         self.__readingBuffer = []
         self.__mainDataBuffer = []
-        self.comLayer = ComSerialPort(self.__serialPortInstance, self.__writeBuffer, self.__readingBuffer)
-        self.comDetect = DetectSerialPort()
+        self.comLayer = ComSerialPort(self.serialPortInstance, self.__writeBuffer, self.__readingBuffer)
+      #  self.comDetect = DetectSerialPort()
         # print(self.comLayer)
         # print(self.comDetect)
 
     def __del__(self):
+        self.serialPortInstance.close()
         print("Run destructor.")
 
     #main data buffer in place where date will be copy after receive
@@ -179,8 +180,8 @@ class SpecialSerialPort:
                     print("Read-Write timeout less than 0. Set rwTimeOut = 1")
 
                 # prepare serial port's hardware buffer
-                self.__serialPortInstance.reset_input_buffer()
-                self.__serialPortInstance.reset_output_buffer()
+                # self.__serialPortInstance.reset_input_buffer()
+                # self.__serialPortInstance.reset_output_buffer()
 
                 self.comLayer.writeFromBuffer()
                 time.sleep(self.__rwTimeOut)

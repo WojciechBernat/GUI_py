@@ -4,9 +4,10 @@ from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QGridLayout
 from PyQt5.QtWidgets import QLineEdit, QPushButton, QHBoxLayout
 
-from DetectSerialPort import DetectSerialPort
 import serial
+from DetectSerialPort import DetectSerialPort
 from SpecialSerialPort import SpecialSerialPort
+import serial.tools.list_ports
 
 class Gui(QWidget):
     def __init__(self, parent=None):
@@ -38,12 +39,13 @@ class Gui(QWidget):
         comInst = str(self.SerialPortLine.text())
 
         if (comInst == "" ):
-            self.LogLine.setTexdt("Nothing to find.")
+            self.LogLine.setText("Nothing to find.")
             return -1
 
         self.LogLine.setText("To find in COM instances: " + comInst)
         self.detectSerialPort.toFind = comInst
-        self.comPort = self.detectSerialPort.detectPort()
+
+        self.comPort = self.detectSerialPort.detectPort()   # return COM number
 
         if (self.comPort == None):
             self.LogLine.setText("Not found.")
@@ -54,24 +56,39 @@ class Gui(QWidget):
 
     def connectCom(self):
         if(self.detectFlag == 1):
+            # Create pySerial instances
             self.detectSerialPort = serial.Serial(self.detectSerialPort.com, 115200, timeout=0.2, write_timeout=0.2)
+            # Create main serial port instances
             self.serialPort = SpecialSerialPort(self.detectSerialPort)
             self.LogLine.setText("Connected " + str(self.comPort))
         else:
             self.LogLine.setText("Cannot connect. No port had been found.")
 
+        for i in range(2):
+            self.readTemp()
+
+        self.printTemp()
+        self.printTempAvg()
+
     def disconnectCom(self):
         if (self.detectFlag == 1):
-            self.detectFlag = 0
-            del self.detectSerialPort
-            self.LogLine.setText("Disconnected " + str(self.comPort))
+            if(self.serialPort.serialPortInstance.is_open == True):
+                self.detectFlag = 0
+                self.serialPort.serialPortInstance.close()
+                self.LogLine.setText("Disconnected " + str(self.comPort) + "\nPort close.")
 
 
     def printTemp(self):
-        pass
+        self.TemperatureLine.setText("Temperature")
+
 
     def printTempAvg(self):
-        pass
+        self.TempertureAvgLine.setText("Average Temperature")
+
+    def readTemp(self):
+        self.serialPort.executeCommand("TelemetryCmd")
+        tmp = self.serialPort.readingBuffer
+        self.TemperatureLine.setText(str(tmp))
 
 
     def createButtosn(self):
@@ -168,6 +185,4 @@ if __name__ == '__main__':
 
     app = QApplication(sys.argv)
     okno = Gui()
-
-
     sys.exit(app.exec_())

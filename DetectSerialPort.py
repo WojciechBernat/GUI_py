@@ -47,7 +47,7 @@ class DetectSerialPort:
                 portList = [list(p) for p in list(serial.tools.list_ports.comports())]  ##Find serial port in use
                 portList = list(portList)  ##converet to list - each item is list of single serial port
 
-                return DetectSerialPort.findDeviceInList(deviceName,portList)
+                return DetectSerialPort.findDeviceInList(deviceName, portList)
         except ValueError:
             print("Invalid time out value. \nPass device name has no value!")
 

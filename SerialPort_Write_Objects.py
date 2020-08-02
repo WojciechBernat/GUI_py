@@ -10,16 +10,18 @@ test_object = SpecialSerialPort(arduinoSerialPort)
 
 test_object.commandDictionary
 
-test_object.executeCommand("BeginCmd")
-test_object.executeCommand("EndCmd")
+
+test_object.executeCommand("TelemetryCmd")
+test_object.executeCommand("TelemetryCmd")
+test_object.executeCommand("TelemetryCmd")
 test_object.executeCommand("TelemetryCmd")
 
-#
-# for i in range(4):
-#     test_object.comLayer.readToBuffer()
-#
-# test_object.readingBuffer
-# test_object.writtingBuffer
+
+for i in range(4):
+    test_object.comLayer.readToBuffer()
+
+test_object.readingBuffer
+test_object.writtingBuffer
 
 
 arduinoSerialPort.close()
